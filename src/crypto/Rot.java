@@ -32,11 +32,11 @@ public class Rot{
             //Getting the ASCII value of the character at index i
             int currentChar = encryptedText.charAt(i);
             //Minus 97 to get the value of the character in the range 0-25
-            //Subtract the number of rotations
+            //Subtract the number of rotations modulo 26 to handle value that exceed 26
             //Add 26 to handle negative values
             //Modulo 26 to get the value in the range 0-25
             //Add 97 to get the ASCII value of the clear character
-            int clearChar = (currentChar - 97 - rotations + 26) % 26 + 97;
+            int clearChar = (currentChar - 97 - (rotations % 26) + 26) % 26 + 97;
             //Add the clear character to the clear text
             clearText += (char) (clearChar);
         }
