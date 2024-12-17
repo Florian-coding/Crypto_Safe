@@ -4,20 +4,7 @@ import utils.Verification;
 
 public class Vigenere {
     public static void main(String[] args) {
-        // Class verification password type
-        Verification verification = new Verification();
-
-        String password = "helloeveryone";
-
-        if(verification.isValidPassword(password)){
-            String encryptedPhrase = encrypt(password, "truth");
-            System.out.println("Encrypted : " +encryptedPhrase);
-
-            String decryptedPhrase = decrypt(encryptedPhrase,"truth");
-            System.out.println("Decrypted : " +decryptedPhrase);
-        } else{
-            System.out.println("Invalid Password");
-        }
+        
     }
 
     // Function that encrypts a phrase by taking two parameters:
