@@ -1,46 +1,10 @@
 package crypto;
 
-import java.util.ArrayList;
 import java.util.List;
+import utils.Constants;
+import utils.Verification;
 
 public class Polybe {
-    // Constants
-    public static final int SQUARE_SIDE_LENGTH = 5;
-    public static final int SQUARE_NB_CELLS = 25;
-    
-    // Error messages
-    public static final String INCORRECT_SQUARE_LENGTH = "Please provide a 5x5 polybe square";
-    public static final String DUPLICATES_SQUARE_VALUES = "Please provide unique values in the polybe square";
-
-    // Test if polybe square is valid (25 unique values), returns a list of errors if any
-    public static List<String> checkPolybeSquare(String polybeSquare) {
-        List<String> errors = new ArrayList<>();
-        int iterator;
-        String uniqueLetters = "";
-        String filteredSquare = polybeSquare.replace("/", "");
-        
-        // Check length, by removing the / and subtracting by a letter (instead of counting v/w  we count v  )
-        if (filteredSquare.length() - 1 != SQUARE_NB_CELLS) {
-            errors.add(INCORRECT_SQUARE_LENGTH);
-        }
-
-        // Check for duplicates
-        for (iterator = 0; iterator < filteredSquare.length(); iterator++) {
-
-            // Get the character
-            char squareCell = filteredSquare.charAt(iterator);
-
-            // If it is already in the unique letters String, we stop and add error
-            if (uniqueLetters.indexOf(squareCell) != -1) {
-                errors.add(DUPLICATES_SQUARE_VALUES);
-                break;
-            } else {
-                uniqueLetters += squareCell;
-            }
-        }
-
-        return errors;
-    }
 
     // Used to get the 2 digits coordinates in the polybe square of a character
     private static String getPolybeCoordinates(String polybeSquare, String messageChar, boolean rowFirst) {
@@ -62,8 +26,8 @@ public class Polybe {
             if (isAfterSlash) letterPositionPolybeSquare -= 2;
 
             // We add 1 here because the origin is 1 and not 0 in polybe square
-            row =  Math.floorDiv(letterPositionPolybeSquare,SQUARE_SIDE_LENGTH) + 1;
-            column = (letterPositionPolybeSquare % SQUARE_SIDE_LENGTH) + 1;
+            row =  Math.floorDiv(letterPositionPolybeSquare, Constants.POLYBE_SQUARE_SIDE_LENGTH) + 1;
+            column = (letterPositionPolybeSquare % Constants.POLYBE_SQUARE_SIDE_LENGTH) + 1;
             result = rowFirst ? Integer.toString(row) + Integer.toString(column) : Integer.toString(column) + Integer.toString(row);
         }
 
@@ -72,11 +36,32 @@ public class Polybe {
         return result;
     }
 
+    private static char getPolybeLetter(String polybeSquare, String coordinates, boolean rowFirst) {
+
+        // Invert row and column if not rowFirst
+        String rowString = (rowFirst ? coordinates.charAt(0) : coordinates.charAt(1)) + "";
+        String columnString = (rowFirst ? coordinates.charAt(1) : coordinates.charAt(0)) + "";
+
+        int row = Integer.parseInt(rowString);
+        int column = Integer.parseInt(columnString);
+
+        // Calculate string position frow row and column
+        int position = ((row - 1) * Constants.POLYBE_SQUARE_SIDE_LENGTH) + (column - 1);
+        
+        boolean isAfterSlash = polybeSquare.indexOf("/") < position;
+
+        if (isAfterSlash) position += 2;
+
+        System.out.println(row + " " + column + " = " + position + " -> " + polybeSquare.charAt(position));
+
+        return polybeSquare.charAt(position);
+    }
+
     // encrypts a message using the polybe square
     public static String encrypt(String message, String polybeSquare, boolean rowFirst) throws Exception {
         
         // Checks if the polybe square is valid
-        List<String> errorMessages = checkPolybeSquare(polybeSquare);
+        List<String> errorMessages = Verification.checkPolybeSquare(polybeSquare);
 
         // Lowered strings
         String lowerMessage = message.toLowerCase();
@@ -101,8 +86,6 @@ public class Polybe {
             // Get the nth character of the message
             String messageChar = lowerMessage.charAt(messageIterator) + "";
 
-            // Adds the coordinate string to the encoded message, handles w, v, i and j
-
             // Handles v/w
             if (lowerPolybeSquare.contains("v/w")) {
                 coordinatesString = switch (messageChar) {
@@ -112,6 +95,7 @@ public class Polybe {
                 };
             }
 
+            // Handles i/j
             if (lowerPolybeSquare.contains("i/j")) {
                 coordinatesString = switch (messageChar) {
                     case "i" -> getPolybeCoordinates(lowerPolybeSquare, "i/j", rowFirst);
@@ -120,10 +104,48 @@ public class Polybe {
                 };
             }
 
+            // Adds the coordinate string to the encoded message
             encodedMessage += coordinatesString;
         }
 
         return encodedMessage;
+    }
+
+    public static String decrypt(String encryptedMessage, String polybeSquare, boolean rowFirst, boolean upperCase)  throws Exception {
+
+        // Checks if the polybe square is valid
+        List<String> errorMessages = Verification.checkPolybeSquare(polybeSquare);
+
+        // Check if the encrypted polybe message is valid
+        errorMessages.addAll(Verification.checkEncryptedPolybeMessage(encryptedMessage));
+
+        // Throw errors if any
+        if (!errorMessages.isEmpty()) {
+            throw new Exception(String.join(" ", errorMessages));
+        }
+
+        String lowerPolybeSquare = polybeSquare.toLowerCase();
+
+        // Decrypted message
+        String decryptedMessage = "";
+        
+        // Message iterator
+        int messageIterator;
+        int stepsCount = encryptedMessage.length()/2;
+
+        for (messageIterator = 0; messageIterator < stepsCount; messageIterator++) {
+            int start = messageIterator * 2;
+            int end = start + 2;
+            String coordinatesString = encryptedMessage.substring(start, end);
+            char letter = getPolybeLetter(lowerPolybeSquare, coordinatesString, rowFirst);
+            decryptedMessage += letter;
+        }
+
+        if (upperCase) {
+            decryptedMessage = decryptedMessage.toUpperCase();
+        }
+
+        return decryptedMessage;
     }
 
     // Used for tests
@@ -142,26 +164,33 @@ public class Polybe {
         boolean rowFirst = false;
         String wvInputString = "hello world";
         String iAndJInputString = "juice wrld";
+        String ijInputEncryptedRow = "11242455"; // AIIZ
+        String wvInputEncryptedColumn = "11252555"; // AVWZ
 
         // Expected
         String wvExpected = "32512323532553342341";
         String ijExpected = "425442315125241341";
+        String ijExpectedDecryptedRow = "aiiz";
+        String wvExpectedDecryptedColumn = "AVVZ";
 
         // Invalid length
-        System.err.println( String.join(", ", checkPolybeSquare(invalidPolybeLength)));
+        System.err.println( String.join(", ", Verification.checkPolybeSquare(invalidPolybeLength)));
 
         // Duplicate values
-        System.err.println( String.join(", ", checkPolybeSquare(duplicatePolybeValue)));
+        System.err.println( String.join(", ", Verification.checkPolybeSquare(duplicatePolybeValue)));
 
         // Both
-        System.err.println( String.join(", ", checkPolybeSquare(invalidLengthDuplicatesPolybe)));
+        System.err.println( String.join(", ", Verification.checkPolybeSquare(invalidLengthDuplicatesPolybe)));
 
+        testEncrypt(wvPolybeSquare, wvInputString, wvExpected, rowFirst);
+        testEncrypt(ijPolybeSquare, iAndJInputString, ijExpected, rowFirst);
 
-        test(wvPolybeSquare, wvInputString, wvExpected, rowFirst);
-        test(ijPolybeSquare, iAndJInputString, ijExpected, rowFirst);
+        testDecrypt(wvPolybeSquare, wvInputEncryptedColumn, wvExpectedDecryptedColumn, false, true);
+        testDecrypt(ijPolybeSquare, ijInputEncryptedRow, ijExpectedDecryptedRow, true, false);
     }
 
-    private static void test(String polybeSquare, String inputString, String expectedString, boolean rowFirst) {
+    // Method used for testing encrypt
+    private static void testEncrypt (String polybeSquare, String inputString, String expectedString, boolean rowFirst) {
         String encodedString;
         try {
             encodedString = encrypt(inputString, polybeSquare, rowFirst);
@@ -170,6 +199,26 @@ public class Polybe {
             System.out.println("Encoded: " + encodedString);
 
             if (encodedString.equals(expectedString)) {
+                System.out.println("As expected");
+            } else {
+                System.out.println("Not expected");
+            }
+        } catch (Exception e) {
+            // Shouldn't happen.
+            System.err.println(e.getMessage());
+        }
+    }
+
+    // Method used for testing decrypt
+    private static void testDecrypt(String polybeSquare, String inputString, String expectedString, boolean rowFirst, boolean upperCase) {
+        String decryptedString;
+        try {
+            decryptedString = decrypt(inputString, polybeSquare, rowFirst, upperCase);
+
+            System.out.println("Input: " + inputString);
+            System.out.println("Decoded: " + decryptedString);
+
+            if (decryptedString.equals(expectedString)) {
                 System.out.println("As expected");
             } else {
                 System.out.println("Not expected");
