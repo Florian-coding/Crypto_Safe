@@ -1,7 +1,5 @@
 package crypto;
 
-import java.util.*;
-
 public class GenerationNumber {
     public static void main(String[] args) {
         generate();
@@ -18,7 +16,7 @@ public class GenerationNumber {
         return randomNumber;
     }
 
-    public static void generate() {
+    public static int generate() {
         // Call function to generate a number based on time
         int randomNumber = generate4DigitNumber();
 
@@ -42,6 +40,6 @@ public class GenerationNumber {
         // Calculate LFSR value based on some arbitrary operation
         int lfsr = (firstNumber + secondNumber) * (thirdNumber + fourthNumber);
 
-        System.out.println("LFSR = " + lfsr);
+        return lfsr;
     }
 }
