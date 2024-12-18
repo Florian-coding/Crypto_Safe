@@ -1,20 +1,7 @@
 package crypto;
 
 public class RC4 {
-    public static void main(String[] args) {
-        String key = "crocodile22";
-        String password = "bonjourlesgens";
-
-        String encrypted = encrypt(password, key);
-        System.out.println("Encrypted text:");
-        System.out.println(encrypted);
-
-        System.out.println();
-
-        String decrypted = decrypt(encrypted, key);
-        System.out.println("Decrypted text:");
-        System.out.println(decrypted);
-    }
+    public static void main(String[] args) {}
 
     public static String encrypt(String password, String key) {
         // Convert strings into arrays of integers
