@@ -1,6 +1,6 @@
 package crypto;
 
-public class GenerationNumber {
+public class NumberGenerator {
     public static void main(String[] args) {
         generate();
     }
@@ -19,8 +19,6 @@ public class GenerationNumber {
     public static int generate() {
         // Call function to generate a number based on time
         int randomNumber = generate4DigitNumber();
-
-        System.out.println("Randomly generated 4-digit number = " + randomNumber);
 
         // Initialize an array to store each digit of the random number
         int[] seedArray = new int[4];
