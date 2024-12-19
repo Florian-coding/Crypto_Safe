@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public class SHA256 {
     private static String ALGORITHM = "SHA-256";
 
-    public static String hash(String password) {
+    public static String hash(String input) {
         MessageDigest md;
         byte[] byteData;
         String hashed = "";
@@ -20,8 +20,8 @@ public class SHA256 {
             return hashed;
         }
 
-        // Send the message bytes
-        md.update(password.getBytes());
+        // Pass the bytes into the message digest
+        md.update(input.getBytes());
 
         // Computes hash
         byteData = md.digest();
@@ -43,9 +43,6 @@ public class SHA256 {
 
     // Checks if the hash of two files is identical
     public static boolean CheckSum(String hash1, String hash2) {
-        if (hash1.equals(hash2)) {
-            return true;
-        }
-        return false;
+        return (hash1.equals(hash2));
     }
 }

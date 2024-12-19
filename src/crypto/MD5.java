@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public class MD5 {
     private static String ALGORITHM = "MD5";
 
-    public static String hash(String password) {
+    public static String hash(String input) {
         MessageDigest md;
         byte[] byteData;
         String hashed = "";
@@ -20,8 +20,8 @@ public class MD5 {
             return hashed;
         }
 
-        // Send the message bytes
-        md.update(password.getBytes());
+        // Pass the bytes into the message digest
+        md.update(input.getBytes());
 
         // Computes hash
         byteData = md.digest();

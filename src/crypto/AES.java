@@ -20,8 +20,8 @@ public class AES {
     private static final int KEY_SPEC_ITERATION = 65536;
     private static final int KEY_SPEC_LENGTH = 256;
 
-    // Encrypts a password with a secret key
-    public static String encrypt(String password, String secretKeyString) {
+    // Encrypts with a secret key
+    public static String encrypt(String input, String secretKeyString) {
         try {
             // Generate an initialization vector for cipher
             IvParameterSpec ivspec = generateInitializationVector();
@@ -40,16 +40,16 @@ public class AES {
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
 
-            // Encrypts the password with the secret key using the cipher
-            byte[] encryptedBytes = cipher.doFinal(password.getBytes(StandardCharsets.UTF_8));
+            // Encrypts with the secret key using the cipher
+            byte[] encryptedBytes = cipher.doFinal(input.getBytes(StandardCharsets.UTF_8));
 
-            // Adds the initialization vector into the crypted password
+            // Adds the initialization vector into the crypted input
             byte[] iv = ivspec.getIV();
             byte[] encryptedDataWithIv = new byte[iv.length + encryptedBytes.length];
             System.arraycopy(iv, 0, encryptedDataWithIv, 0, iv.length);
             System.arraycopy(encryptedBytes, 0, encryptedDataWithIv, iv.length, encryptedBytes.length);
 
-            // Return the final encrypted password in Base64 with IV
+            // Return the final encrypted in Base64 with IV
             return Base64.getEncoder().encodeToString(encryptedDataWithIv);
         } catch (Exception e) {
             System.out.println("Erreur lors de l'encryption: " + e.toString());
@@ -57,11 +57,11 @@ public class AES {
         }
     }
 
-    // Decrypts a password with it's secret key
-    public static String decrypt(String encryptedPassword, String secretKeyString) {
+    // Decrypts with a secret key
+    public static String decrypt(String encrypted, String secretKeyString) {
         try {
             // Decodes the encrypted into an byte array
-            byte[] encryptedDataWithIv = Base64.getDecoder().decode(encryptedPassword);
+            byte[] encryptedDataWithIv = Base64.getDecoder().decode(encrypted);
 
             // Extract the 16 bytes IV and the encrypted data
             byte[] iv = new byte[16];
@@ -72,7 +72,7 @@ public class AES {
             // Recreate the IV parameters from the extracted 16 bytes IV
             IvParameterSpec ivspec = new IvParameterSpec(iv);
 
-            // Used to process the password decryption
+            // Used to process the decryption
             SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY_ALGORITHM);
 
             // Mix secret key and salt for specification, with an ammount of iteration and a length of 256 bits

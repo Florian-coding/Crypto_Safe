@@ -4,78 +4,78 @@ import data.Constants;
 
 public class Polybe {
 
-    // Encrypts a password using the polybe square
-    public static String encrypt(String password, String polybeSquare, boolean rowFirst) {
+    // Encrypts using the polybe square
+    public static String encrypt(String input, String polybeSquare, boolean rowFirst) {
         // Lowered strings
-        String lowerPassword = password.toLowerCase();
+        String lowerInput = input.toLowerCase();
         String lowerPolybeSquare = polybeSquare.toLowerCase();
 
         // Return value
-        String encryptedPassword = "";
+        String encrypted = "";
 
-        // Password iterator
-        int passwordIterator;
-        String passwordChar;
+        // For iteration
+        int iterator;
+        String currentChar;
 
         // Used for coordinates
         String coordinatesString = "";
 
-        for (passwordIterator = 0; passwordIterator < lowerPassword.length(); passwordIterator++) {
+        for (iterator = 0; iterator < lowerInput.length(); iterator++) {
 
-            // Get the nth character of the password
-            passwordChar = lowerPassword.charAt(passwordIterator) + "";
+            // Get the nth character
+            currentChar = lowerInput.charAt(iterator) + "";
 
             // Handles v/w
             if (lowerPolybeSquare.contains(Constants.POLYBE_VW)) {
-                coordinatesString = switch (passwordChar) {
+                coordinatesString = switch (currentChar) {
                     case "w" ->
                         getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_VW, rowFirst);
                     case "v" ->
                         getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_VW, rowFirst);
                     default ->
-                        getCoordinatesFromLetter(lowerPolybeSquare, passwordChar, rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, currentChar, rowFirst);
                 };
             }
 
             // Handles i/j
             if (lowerPolybeSquare.contains(Constants.POLYBE_IJ)) {
-                coordinatesString = switch (passwordChar) {
+                coordinatesString = switch (currentChar) {
                     case "i" ->
                         getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_IJ, rowFirst);
                     case "j" ->
                         getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_IJ, rowFirst);
                     default ->
-                        getCoordinatesFromLetter(lowerPolybeSquare, passwordChar, rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, currentChar, rowFirst);
                 };
             }
 
-            // Adds the coordinate string to the encoded password
-            encryptedPassword += coordinatesString;
+            // Adds the coordinate string to the encrypted
+            encrypted += coordinatesString;
         }
 
-        return encryptedPassword;
+        return encrypted;
     }
 
-    // Decrypts a password using polybe square
-    public static String decrypt(String encryptedPassword, String polybeSquare, boolean rowFirst) {
+    // Decrypts en encrypted text using polybe square
+    public static String decrypt(String encrypted, String polybeSquare, boolean rowFirst) {
         String lowerPolybeSquare = polybeSquare.toLowerCase();
 
-        // Decrypted password
-        String decryptedPassword = "";
+        // Decrypted text
+        String decrypted = "";
 
-        // Password iterator
-        int passwordIterator;
-        int stepsCount = encryptedPassword.length() / 2;
+        // For iteration
+        int iterator;
+        int stepsCount = encrypted.length() / 2;
 
-        for (passwordIterator = 0; passwordIterator < stepsCount; passwordIterator++) {
-            int start = passwordIterator * 2;
+        for (iterator = 0; iterator < stepsCount; iterator++) {
+            int start = iterator * 2;
             int end = start + 2;
-            String coordinatesString = encryptedPassword.substring(start, end);
+            String coordinatesString = encrypted.substring(start, end);
             char letter = getLetterFromCoordinates(lowerPolybeSquare, coordinatesString, rowFirst);
-            decryptedPassword += letter;
+            decrypted += letter;
         }
 
-        return decryptedPassword;
+        return decrypted;
     }
 
     // Used to print a perfect polybe square
@@ -114,7 +114,7 @@ public class Polybe {
     }
     
     // Used to get the 2 digits coordinates in the polybe square of a character
-    private static String getCoordinatesFromLetter(String polybeSquare, String passwordChar, boolean rowFirst) {
+    private static String getCoordinatesFromLetter(String polybeSquare, String inputChar, boolean rowFirst) {
         int row;
         int column;
         int letterPositionPolybeSquare;
@@ -122,7 +122,7 @@ public class Polybe {
         boolean isAfterSlash;
 
         // Get the position of the letter in the polybe square
-        letterPositionPolybeSquare = polybeSquare.indexOf(passwordChar);
+        letterPositionPolybeSquare = polybeSquare.indexOf(inputChar);
 
         isAfterSlash = polybeSquare.indexOf(Constants.POLYBE_SLASH) < letterPositionPolybeSquare;
 

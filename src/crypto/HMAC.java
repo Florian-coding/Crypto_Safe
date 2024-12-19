@@ -10,7 +10,7 @@ public class HMAC {
     private static final String CHARSET = "UTF-8";
 
     // Method to calculate the HMAC of a given string
-    public static String hash(String password, String key) {
+    public static String hash(String input, String key) {
 
         try {
             // Initialize the Mac object with the HMAC algorithm
@@ -22,29 +22,28 @@ public class HMAC {
             // Initialize the Mac with the secret key
             sha256_HMAC.init(secret_key);
 
-            // Generate a salt (number) and add salt and pepper to the password
+            // Generate a salt (number) and add salt and pepper to the input
             int salt = NumberGenerator.generate();
-            password = salt + password + PEPPER;
+            input = salt + input + PEPPER;
 
             // Compute the first HMAC hash with salt and pepper
-            byte[] firstHash = sha256_HMAC.doFinal(password.getBytes(CHARSET));
+            byte[] firstHash = sha256_HMAC.doFinal(input.getBytes(CHARSET));
 
             // Re-hash the result of the first hash
             byte[] secondHash = sha256_HMAC.doFinal(firstHash);
 
-            // Convert the final hash to hexadecimal so that special characters can be displayed
+            // Convert the final hash to hexadecimal so that special characters can be
+            // displayed
             return byteArrayToHex(secondHash);
         } catch (Exception e) {
-            System.out.println("Erreur lors du hashage: " + e.toString());
+            System.out.println("Erreur lors du hachage: " + e.toString());
             return "";
         }
     }
-    
+
     // Checking method between two hatchings
     public static boolean CheckSum(String hash1, String hash2) {
-        if(hash1.equals(hash2))
-            return true;
-        return false;
+        return hash1.equals(hash2);
     }
 
     // Method to convert a byte array into a hexadecimal string
@@ -54,8 +53,9 @@ public class HMAC {
         StringBuilder sb = new StringBuilder(array.length * 2);
 
         // Iterate over each byte and format it as two hexadecimal characters
-        for(byte b: array)
+        for (byte b : array) {
             sb.append(String.format("%02x", b));
+        }
 
         // Return the hexadecimal string
         return sb.toString();

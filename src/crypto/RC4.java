@@ -1,11 +1,9 @@
 package crypto;
 
 public class RC4 {
-    public static void main(String[] args) {}
-
-    public static String encrypt(String password, String key) {
+    public static String encrypt(String input, String key) {
         // Convert strings into arrays of integers
-        int[] passwordClearArray = password.chars().toArray();
+        int[] inputClearArray = input.chars().toArray();
         int[] keys = key.chars().toArray();
 
         StringBuilder encrypted = new StringBuilder();
@@ -35,8 +33,8 @@ public class RC4 {
         int i = 0;
         j = 0;
 
-        // Loop from 0 to the length of the cleartext password array
-        for (int l = 0; l < passwordClearArray.length; l++) {
+        // Loop from 0 to the length of the cleartext input array
+        for (int l = 0; l < inputClearArray.length; l++) {
             // Add 1 to the value of i
             // Perform a modulo operation to ensure we stay within array bounds
             i = (i + 1) % 256;
@@ -55,21 +53,20 @@ public class RC4 {
                 encrypted.append(" ");
             }
 
-            // Perform XOR (^) between a value from the cleartext password array
+            // Perform XOR (^) between a value from the cleartext input array
             // and a value from the generated keystream
-            encrypted.append(passwordClearArray[l] ^ keyStream);
+            encrypted.append(inputClearArray[l] ^ keyStream);
         }
 
         return encrypted.toString();
     }
 
-    public static String decrypt(String passwordEncrypted, String key) {
-        // Initialize an array of strings
-        // Contains the encrypted password passed as a parameter
-        // A space is added between the elements of the password
-        String[] encryptedNumbers = passwordEncrypted.split(" ");
-        // Initialize an integer array with a length equal to the length of the encryptedNumbers array
-        int[] passwordEncryptedArray = new int[encryptedNumbers.length];
+    public static String decrypt(String encrypted, String key) {
+        // Split encrypted text as array of strings by space
+        String[] encryptedNumbers = encrypted.split(" ");
+        // Initialize an integer array with a length equal to the length of the
+        // encryptedNumbers array
+        int[] encryptedArray = new int[encryptedNumbers.length];
 
         // Convert the key into an array of integers
         int[] keys = key.chars().toArray();
@@ -81,8 +78,9 @@ public class RC4 {
         int[] T = new int[256];
 
         for (int m = 0; m < encryptedNumbers.length; m++) {
-            // Convert the value of the array (string) to an int and store it in the integer array
-            passwordEncryptedArray[m] = Integer.parseInt(encryptedNumbers[m]);
+            // Convert the value of the array (string) to an int and store it in the integer
+            // array
+            encryptedArray[m] = Integer.parseInt(encryptedNumbers[m]);
         }
 
         // Initialize T and S
@@ -106,8 +104,8 @@ public class RC4 {
         int i = 0;
         j = 0;
 
-        // Decrypt the encrypted password
-        for (int l = 0; l < passwordEncryptedArray.length; l++) {
+        // Decrypt the encrypted text
+        for (int l = 0; l < encryptedArray.length; l++) {
             // Add 1 to the value of i
             i = (i + 1) % 256;
             // Add the value of j and a value from the S array
@@ -120,9 +118,9 @@ public class RC4 {
             // Add two values from the S array
             int keyStream = S[(S[i] + S[j]) % 256];
 
-            // Perform XOR (^) between a value from the encrypted password array
+            // Perform XOR (^) between a value from the encrypted array
             // and a value from the generated keystream
-            decrypted.append((char) (passwordEncryptedArray[l] ^ keyStream));
+            decrypted.append((char) (encryptedArray[l] ^ keyStream));
         }
 
         return decrypted.toString();
