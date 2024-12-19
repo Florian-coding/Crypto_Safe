@@ -4,17 +4,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
-    public static void main(String[] args) {}
+    private static String ALGORITHM = "MD5";
 
-    public static String hash(String password){
+    public static String hash(String password) {
         MessageDigest md;
         byte[] byteData;
         String hashed = "";
         int iterator;
 
-        // Causes an exception if provided algorithm doesn't exist (should never throw exception here)
+        // Causes an exception if provided algorithm doesn't exist
+        // (should never throw exception here)
         try {
-            md = MessageDigest.getInstance("MD5");
+            md = MessageDigest.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             return hashed;
         }
@@ -41,10 +42,16 @@ public class MD5 {
     }
 
     // Checks if the hash of two files is identical
-    public static boolean CheckSum(String hash1, String hash2){
-        if(hash1.equals(hash2)){
+    public static boolean CheckSum(String hash1, String hash2) {
+        if (hash1.equals(hash2)) {
             return true;
         }
         return false;
+    }
+
+    // For testing
+    public static void main(String[] args) throws Exception {
+        String hashed = hash("test");
+        System.out.println(hashed);
     }
 }
