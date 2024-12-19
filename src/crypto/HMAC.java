@@ -9,7 +9,7 @@ public class HMAC {
     public static final String PEPPER = "Crocodile22!";
 
     // Method to calculate the HMAC of a given string
-    public static String calculateHMac(String key, String password) throws Exception {
+    public static String computeHMac(String key, String password) throws Exception {
         // Initialize the Mac object with the HMAC algorithm
         Mac sha256_HMAC = Mac.getInstance(ALGORITHM);
 
