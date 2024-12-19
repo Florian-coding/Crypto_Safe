@@ -92,8 +92,8 @@ public class AES {
 
         } catch (Exception e) {
             System.out.println("Erreur lors du décryptage: " + e.toString());
+            return "";
         }
-        return null;
     }
 
     // Generates a random initialization vector
