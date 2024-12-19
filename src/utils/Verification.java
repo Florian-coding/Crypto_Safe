@@ -52,7 +52,7 @@ public class Verification {
         return errors;
     }
 
-    // Validates if it's a valid encrypted polybe password (pair length, digits only)
+    // Validates if it's a valid encrypted polybe text (pair length, digits only)
     public static List<String> checkEncryptedPolybeMessage(String encrypted) {
         boolean error = false;
         int iterator;
@@ -76,8 +76,8 @@ public class Verification {
         return errors;
     }
     
-    // nom de fonction confusant A CHANGER AVANT MAIN
-    public static boolean isValidPassword(String input) {
+    // Checks if provided string only has lower alphabetical character
+    public static boolean IsValidLowerAlphabet(String input) {
         // Loop through each character in the string
         for (int i = 0; i < input.length(); i++) {
             char currentChar = input.charAt(i);
