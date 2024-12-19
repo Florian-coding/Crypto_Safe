@@ -33,6 +33,11 @@ public class FileManager {
         return content.toString().trim(); // Return the content as a string
     }
 
+    //Read content from a file and return it as a string array (each line is an element)
+    public static String[] readFromFileAsArray(String filePath) {
+        return readFromFile(filePath).split(System.lineSeparator());
+    }
+
     // Delete a file
     public static void deleteFile(String filePath) {
         File file = new File(filePath);
