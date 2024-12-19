@@ -3,25 +3,25 @@ package crypto;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHA256
-{
+public class SHA256 {
+    private static String ALGORITHM = "SHA-256";
 
-    public static String hash (String message) {
-
+    public static String hash(String password) {
         MessageDigest md;
         byte[] byteData;
         String hashed = "";
         int iterator;
 
-        // Causes an exception if provided algorithm doesn't exist (should never throw exception here)
+        // Causes an exception if provided algorithm doesn't exist
+        // (should never throw exception here)
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             return hashed;
         }
 
         // Send the message bytes
-        md.update(message.getBytes());
+        md.update(password.getBytes());
 
         // Computes hash
         byteData = md.digest();
@@ -41,9 +41,16 @@ public class SHA256
         return hashed;
     }
 
+    // Checks if the hash of two files is identical
+    public static boolean CheckSum(String hash1, String hash2) {
+        if (hash1.equals(hash2)) {
+            return true;
+        }
+        return false;
+    }
+
     // For testing
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         String hashed = hash("test");
         System.out.println(hashed);
     }
