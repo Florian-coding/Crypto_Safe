@@ -2,13 +2,16 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import data.Constants;
 
 public class Verification {
     
     // Error messages
-    public static final String INCORRECT_POLYBE_SQUARE_LENGTH = "Please provide a 5x5 polybe square";
-    public static final String DUPLICATES_POLYBE_SQUARE_VALUES = "Please provide unique values in the polybe square";
-    public static final String INCORRECT_POLYBE_MESSAGE = "Please provide a valid encrypted polybe message";
+    public static final String INCORRECT_POLYBE_SQUARE_LENGTH = "Veuillez saisir un carré de Polybe 5x5";
+    public static final String DUPLICATES_POLYBE_SQUARE_VALUES = "Veuillez saisir des valeurs unique dans votre carré de Polybe";
+    public static final String INCORRECT_POLYBE_PASSWORD = "Veuillez saisir un mot de passe encrypté de Polybe valide";
+    public static final String INCORRECT_POLYBE_SQUARE_VALUES_IJ_VW = "Veuillez saisir un carré de Polybe comportant uniquement la paire v/w ou i/j";
+
 
     // Test if polybe square is valid (25 unique values), returns a list of errors if any
     public static List<String> checkPolybeSquare(String polybeSquare) {
@@ -16,8 +19,15 @@ public class Verification {
         int iterator;
         String uniqueLetters = "";
 
+        // Check if the square has i/j or v/w
+        // If it has both pairs or doesn't have any pair, add error
+        // Simpler condition to (HAS_VW && HAS_IJ) || (!HAS_VW && !HAS_IJ) = HAS_VW = HAS_IJ
+        if ((polybeSquare.indexOf(Constants.POLYBE_VW) == -1) == (polybeSquare.indexOf(Constants.POLYBE_IJ) == -1)) {
+            errors.add(INCORRECT_POLYBE_SQUARE_VALUES_IJ_VW);
+        }
+
         // Remove slash / for count and iterating
-        String filteredSquare = polybeSquare.replace("/", "");
+        String filteredSquare = polybeSquare.replace(Constants.POLYBE_SLASH, "");
         
         // Check length, by removing the / and subtracting by a letter (instead of counting v/w  we count v  )
         if (filteredSquare.length() - 1 != Constants.POLYBE_SQUARE_NB_CELLS) {
@@ -42,7 +52,7 @@ public class Verification {
         return errors;
     }
 
-    // Validates if it's a valid encrypted polybe message (pair length, digits only)
+    // Validates if it's a valid encrypted polybe password (pair length, digits only)
     public static List<String> checkEncryptedPolybeMessage(String encrypted) {
         boolean error = false;
         int iterator;
@@ -61,7 +71,7 @@ public class Verification {
             }
         }
 
-        if (error) errors.add(INCORRECT_POLYBE_MESSAGE);
+        if (error) errors.add(INCORRECT_POLYBE_PASSWORD);
         
         return errors;
     }
@@ -80,9 +90,4 @@ public class Verification {
         }
         return true; // Valid string if all characters are lowercase letters
     }
-
-    public static void main(String[] args) {
-
-    }
-
 }
