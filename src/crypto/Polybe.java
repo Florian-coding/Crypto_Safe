@@ -1,82 +1,86 @@
 package crypto;
 
-import utils.Constants;
+import data.Constants;
 
 public class Polybe {
-    // encrypts a message using the polybe square
-    public static String encrypt(String message, String polybeSquare, boolean rowFirst) {
+
+    // Encrypts a password using the polybe square
+    public static String encrypt(String password, String polybeSquare, boolean rowFirst) {
         // Lowered strings
-        String lowerMessage = message.toLowerCase();
+        String lowerPassword = password.toLowerCase();
         String lowerPolybeSquare = polybeSquare.toLowerCase();
 
         // Return value
-        String encodedMessage = "";
+        String encryptedPassword = "";
 
-        // Message iterator
-        int messageIterator;
+        // Password iterator
+        int passwordIterator;
+        String passwordChar;
 
         // Used for coordinates
         String coordinatesString = "";
 
-        for (messageIterator = 0; messageIterator < lowerMessage.length(); messageIterator++) {
+        for (passwordIterator = 0; passwordIterator < lowerPassword.length(); passwordIterator++) {
 
-            // Get the nth character of the message
-            String messageChar = lowerMessage.charAt(messageIterator) + "";
+            // Get the nth character of the password
+            passwordChar = lowerPassword.charAt(passwordIterator) + "";
 
             // Handles v/w
-            if (lowerPolybeSquare.contains("v/w")) {
-                coordinatesString = switch (messageChar) {
+            if (lowerPolybeSquare.contains(Constants.POLYBE_VW)) {
+                coordinatesString = switch (passwordChar) {
                     case "w" ->
-                        getPolybeCoordinates(lowerPolybeSquare, "v/w", rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_VW, rowFirst);
                     case "v" ->
-                        getPolybeCoordinates(lowerPolybeSquare, "v/w", rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_VW, rowFirst);
                     default ->
-                        getPolybeCoordinates(lowerPolybeSquare, messageChar, rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, passwordChar, rowFirst);
                 };
             }
 
             // Handles i/j
-            if (lowerPolybeSquare.contains("i/j")) {
-                coordinatesString = switch (messageChar) {
+            if (lowerPolybeSquare.contains(Constants.POLYBE_IJ)) {
+                coordinatesString = switch (passwordChar) {
                     case "i" ->
-                        getPolybeCoordinates(lowerPolybeSquare, "i/j", rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_IJ, rowFirst);
                     case "j" ->
-                        getPolybeCoordinates(lowerPolybeSquare, "i/j", rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, Constants.POLYBE_IJ, rowFirst);
                     default ->
-                        getPolybeCoordinates(lowerPolybeSquare, messageChar, rowFirst);
+                        getCoordinatesFromLetter(lowerPolybeSquare, passwordChar, rowFirst);
                 };
             }
 
-            // Adds the coordinate string to the encoded message
-            encodedMessage += coordinatesString;
+            // Adds the coordinate string to the encoded password
+            encryptedPassword += coordinatesString;
         }
 
-        return encodedMessage;
+        return encryptedPassword;
     }
 
-    public static String decrypt(String encryptedMessage, String polybeSquare, boolean rowFirst) {
+    // Decrypts a password using polybe square
+    public static String decrypt(String encryptedPassword, String polybeSquare, boolean rowFirst) {
         String lowerPolybeSquare = polybeSquare.toLowerCase();
 
-        // Decrypted message
-        String decryptedMessage = "";
+        // Decrypted password
+        String decryptedPassword = "";
 
-        // Message iterator
-        int messageIterator;
-        int stepsCount = encryptedMessage.length() / 2;
+        // Password iterator
+        int passwordIterator;
+        int stepsCount = encryptedPassword.length() / 2;
 
-        for (messageIterator = 0; messageIterator < stepsCount; messageIterator++) {
-            int start = messageIterator * 2;
+        for (passwordIterator = 0; passwordIterator < stepsCount; passwordIterator++) {
+            int start = passwordIterator * 2;
             int end = start + 2;
-            String coordinatesString = encryptedMessage.substring(start, end);
-            char letter = getPolybeLetter(lowerPolybeSquare, coordinatesString, rowFirst);
-            decryptedMessage += letter;
+            String coordinatesString = encryptedPassword.substring(start, end);
+            char letter = getLetterFromCoordinates(lowerPolybeSquare, coordinatesString, rowFirst);
+            decryptedPassword += letter;
         }
 
-        return decryptedMessage;
+        return decryptedPassword;
     }
 
-    public static void DisplaySquare(String square) {
-        int slashPosition = square.indexOf("/");
+    // Used to print a perfect polybe square
+    public static void PrintSquare(String square) {
+        int slashPosition = square.indexOf(Constants.POLYBE_SLASH);
 
         String s = "";
 
@@ -90,12 +94,12 @@ public class Polybe {
 
             String toAppend = c;
 
-            // If the second character is "/", then we take the whole X/Y part
-            if ("/".equals(c2)) {
+            // If the second character is Constants.POLYBE_SLASH, then we take the whole X/Y part
+            if (Constants.POLYBE_SLASH.equals(c2)) {
                 toAppend = c + c2 + c3;
             
-            // This case is useful after the "/"
-            } else if ("/".equals(c)) {
+            // This case is useful after the Constants.POLYBE_SLASH
+            } else if (Constants.POLYBE_SLASH.equals(c)) {
                 toAppend = c2;
             }
 
@@ -110,7 +114,7 @@ public class Polybe {
     }
     
     // Used to get the 2 digits coordinates in the polybe square of a character
-    private static String getPolybeCoordinates(String polybeSquare, String messageChar, boolean rowFirst) {
+    private static String getCoordinatesFromLetter(String polybeSquare, String passwordChar, boolean rowFirst) {
         int row;
         int column;
         int letterPositionPolybeSquare;
@@ -118,9 +122,9 @@ public class Polybe {
         boolean isAfterSlash;
 
         // Get the position of the letter in the polybe square
-        letterPositionPolybeSquare = polybeSquare.indexOf(messageChar);
+        letterPositionPolybeSquare = polybeSquare.indexOf(passwordChar);
 
-        isAfterSlash = polybeSquare.indexOf("/") < letterPositionPolybeSquare;
+        isAfterSlash = polybeSquare.indexOf(Constants.POLYBE_SLASH) < letterPositionPolybeSquare;
 
         // If it exists in the polybe square
         if (letterPositionPolybeSquare != -1) {
@@ -137,11 +141,11 @@ public class Polybe {
                     : Integer.toString(column) + Integer.toString(row);
         }
 
-        // System.out.println(polybeSquare + ": " + messageChar + " -> " + result);
         return result;
     }
 
-    private static char getPolybeLetter(String polybeSquare, String coordinates, boolean rowFirst) {
+    // Used to letter from the coordinate in the polybe square
+    private static char getLetterFromCoordinates(String polybeSquare, String coordinates, boolean rowFirst) {
 
         // Invert row and column if not rowFirst
         String rowString = (rowFirst ? coordinates.charAt(0) : coordinates.charAt(1)) + "";
@@ -153,13 +157,11 @@ public class Polybe {
         // Calculate string position frow row and column
         int position = ((row - 1) * Constants.POLYBE_SQUARE_SIDE_LENGTH) + (column - 1);
 
-        boolean isAfterSlash = polybeSquare.indexOf("/") < position;
+        boolean isAfterSlash = polybeSquare.indexOf(Constants.POLYBE_SLASH) < position;
 
         if (isAfterSlash) {
             position += 2;
         }
-
-        System.out.println(row + " " + column + " = " + position + " -> " + polybeSquare.charAt(position));
 
         return polybeSquare.charAt(position);
     }
