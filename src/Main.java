@@ -8,6 +8,7 @@ import crypto.Rot;
 import crypto.SHA256;
 import crypto.Vigenere;
 import data.Texts;
+import utils.FileManager;
 import utils.Verification;
 
 import java.util.List;
@@ -146,6 +147,9 @@ public class Main {
         }
 
         CommandLineInterface.DisplayText("Mot de passe chiffré: " + output);
+
+        FileManager.writeToFile(output, "crypto_safe.txt");
+        CommandLineInterface.DisplayInfo("Le mot de passe chiffré a été stocké dans le fichier crypto_safe.txt");
 
         selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
 
