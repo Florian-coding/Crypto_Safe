@@ -21,7 +21,7 @@ public class AES {
     private static final int KEY_SPEC_LENGTH = 256;
 
     // Encrypts a password with a secret key
-    public static String encrypt(String passwordToEncrypt, String secretKeyString) {
+    public static String encrypt(String password, String secretKeyString) {
         try {
             // Generate an initialization vector for cipher
             IvParameterSpec ivspec = generateInitializationVector();
@@ -41,7 +41,7 @@ public class AES {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
 
             // Encrypts the password with the secret key using the cipher
-            byte[] encryptedBytes = cipher.doFinal(passwordToEncrypt.getBytes(StandardCharsets.UTF_8));
+            byte[] encryptedBytes = cipher.doFinal(password.getBytes(StandardCharsets.UTF_8));
 
             // Adds the initialization vector into the crypted password
             byte[] iv = ivspec.getIV();
@@ -97,7 +97,7 @@ public class AES {
     }
 
     // Generates a random initialization vector
-    public static IvParameterSpec generateInitializationVector() {
+    private static IvParameterSpec generateInitializationVector() {
         // 16 bytes standard to AES
         byte[] iv = new byte[16];
         // Fill with random bytes
