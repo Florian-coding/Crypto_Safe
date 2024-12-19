@@ -48,10 +48,4 @@ public class SHA256 {
         }
         return false;
     }
-
-    // For testing
-    public static void main(String[] args) throws Exception {
-        String hashed = hash("test");
-        System.out.println(hashed);
-    }
 }
