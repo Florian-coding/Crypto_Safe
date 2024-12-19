@@ -92,8 +92,8 @@ public class AES {
 
         } catch (Exception e) {
             System.out.println("Erreur lors du décryptage: " + e.toString());
+            return "";
         }
-        return null;
     }
 
     // Generates a random initialization vector
@@ -103,18 +103,5 @@ public class AES {
         // Fill with random bytes
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
-    }
-
-    // test
-    public static void main(String[] args) {
-
-        String originalString = "salut tout le monde, comment ça va ?";
-        String secretKey = "crocodile22";
-
-        String encryptedString = encrypt(originalString, secretKey);
-        String decryptedString = decrypt(encryptedString, secretKey);
-
-        System.out.println("AES encryption : " + encryptedString);
-        System.out.println("AES decryption : " + decryptedString);
     }
 }
