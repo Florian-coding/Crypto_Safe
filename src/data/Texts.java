@@ -4,7 +4,7 @@ public class Texts {
     // --- MENU -- //
     public static final String APP_NAME = "CRYPTO SAFE";
     public static final String WELCOME = "Bienvenue sur notre gestionnaire de mot de passe exceptionnel !";
-    public static final String[] MAIN_MENU = { "Chiffrer un mot de passe", "Déchiffrer un mot de passe", "Hacher un mot de passe", "Générer un nombre entier pseudo-aléatoire", "Cacher un message en stéganographie", "Quitter" };
+    public static final String[] MAIN_MENU = { "Chiffrer un mot de passe", "Déchiffrer un mot de passe", "Hacher un mot de passe", "Générer un nombre entier pseudo-aléatoire", "Cacher un message en stéganographie","Voir mes mots de passes","Quitter" };
     public static final String[] ENCRYPTION_METHODS = { "ROT(X)", "Vigenère", "Polybe", "Valdo", "Enigma", "RC4", "AES" };
     public static final String[] HASH_METHODS = { "MD5", "SHA-256", "HMAC" };
     public static final String[] HELP_MENU = {
@@ -19,6 +19,7 @@ public class Texts {
     public static final String HASH_MENU_CHOSEN = "Vous avez choisie le menu de hachage";
     public static final String RANDOM_MENU_CHOSEN = "Vous avez choisie le générateur de nombre";
     public static final String REDO_OR_MENU = "Souhaitez vous recommencer ou retourner au menu ?";
+    public static final String VIEW_FILE_MENU_CHOSEN = "Vous avez choisie le menu de visualisation de fichier";
     public static final String[] REDO_MENU_CHOICES = { "Recommencer", "Retourner au menu" };
 
     public static final String APP_NAME_ASCII =

@@ -38,6 +38,12 @@ public class Main {
                 HashMenu();
             case 4 ->
                 PseudoRandomMenu();
+            case 5 ->
+                //Todo: Implement steganography
+             CommandLineInterface.DisplayInfo(Texts.EXIT);
+            case 6 ->
+                ViewFileMenu();
+
             default -> {
                 CommandLineInterface.DisplayInfo(Texts.EXIT);
             }
@@ -217,7 +223,14 @@ public class Main {
     public static void PseudoRandomMenu() {
         CommandLineInterface.Clear();
         CommandLineInterface.DisplayInfo(Texts.RANDOM_MENU_CHOSEN);
+    }
 
+    public static void ViewFileMenu() {
+        CommandLineInterface.Clear();
+        CommandLineInterface.DisplayInfo(Texts.VIEW_FILE_MENU_CHOSEN);
+        CommandLineInterface.DisplayText("Le contenu du fichier crypto_safe.txt est le suivant:");
+        CommandLineInterface.DisplayText(FileManager.readFromFile("crypto_safe.txt"));
 
+        MainMenu();
     }
 }
