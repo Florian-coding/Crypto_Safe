@@ -11,7 +11,7 @@ public class NumberGenerator {
         int randomNumber = (int) currentTime * -1;
         return randomNumber;
     }
-    public static void generate() {
+        public static int generate() {
         // Call function to generate a number based on time
         int randomNumber = generate4DigitNumber();
         System.out.println("Randomly generated 4-digit number = " + randomNumber);
@@ -29,6 +29,6 @@ public class NumberGenerator {
         int fourthNumber = seedArray[3];
         // Calculate LFSR value based on some arbitrary operation
         int lfsr = (firstNumber + secondNumber) * (thirdNumber + fourthNumber);
-        System.out.println("LFSR = " + lfsr);
+        return lfsr;
     }
 }
