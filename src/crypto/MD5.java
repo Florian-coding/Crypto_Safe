@@ -3,8 +3,8 @@ package crypto;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHA256 {
-    private static String ALGORITHM = "SHA-256";
+public class MD5 {
+    private static String ALGORITHM = "MD5";
 
     public static String hash(String input) {
         MessageDigest md;
@@ -43,6 +43,9 @@ public class SHA256 {
 
     // Checks if the hash of two files is identical
     public static boolean CheckSum(String hash1, String hash2) {
-        return (hash1.equals(hash2));
+        if (hash1.equals(hash2)) {
+            return true;
+        }
+        return false;
     }
 }
