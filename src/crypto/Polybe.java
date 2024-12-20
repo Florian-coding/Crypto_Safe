@@ -100,7 +100,7 @@ public class Polybe {
             
             // This case is useful after the Constants.POLYBE_SLASH
             } else if (Constants.POLYBE_SLASH.equals(c)) {
-                toAppend = c2;
+                toAppend = c3;
             }
 
             // After every character, we put a tab
@@ -164,5 +164,9 @@ public class Polybe {
         }
 
         return polybeSquare.charAt(position);
+    }
+
+    public static void main(String[] args) {
+        PrintSquare("abcdefghijklmnopqrstuv/wxyz");
     }
 }
