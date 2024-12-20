@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class HMAC {
     // Constant defining the HMAC algorithm used
     private static final String ALGORITHM = "HmacSHA256";
+    private  static final String SALT = "crypto";
     private static final String PEPPER = "Crocodile22!";
     private static final String CHARSET = "UTF-8";
 
@@ -22,9 +23,8 @@ public class HMAC {
             // Initialize the Mac with the secret key
             sha256_HMAC.init(secret_key);
 
-            // Generate a salt (number) and add salt and pepper to the input
-            int salt = NumberGenerator.generate();
-            input = salt + input + PEPPER;
+            // add salt and pepper to the input
+            input = SALT + input + PEPPER;
 
             // Compute the first HMAC hash with salt and pepper
             byte[] firstHash = sha256_HMAC.doFinal(input.getBytes(CHARSET));
