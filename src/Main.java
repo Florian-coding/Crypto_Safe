@@ -203,10 +203,10 @@ public class Main {
             default -> MainMenu();
         }
 
-        DecryptMenu(input);
+        DecryptMenu();
     }
 
-    public static void DecryptMenu(String encryptedText){
+    public static void DecryptMenu(){
         CommandLineInterface.Clear();
         CommandLineInterface.DisplayInfo(Texts.USER_PROMPT_DECRYPT_METHOD);
 
@@ -216,13 +216,13 @@ public class Main {
             case 1 -> {
                 // Rot
                 int rotations = CommandLineInterface.AskInteger(Texts.INPUT_ROT);
-                output = Rot.decrypt(encryptedText, rotations);
+                output = Rot.decrypt(input, rotations);
                 break;
             }
             case 2 -> {
                 // Vigenère
                 String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
-                output = Vigenere.decrypt(encryptedText, key);
+                output = Vigenere.decrypt(input, key);
                 break;
             }
             case 3 -> {
@@ -259,6 +259,32 @@ public class Main {
                 boolean rowFirst = rowChoice == 1;
 
                 output = Polybe.decrypt(input, selectedPolybeSquare, rowFirst);
+                break;
+            }
+            case 4 -> {
+
+            }
+            case 5 -> {
+                // Enigma
+                Rotor rotorOne = new Rotor(Constants.ENIGMA_LETTERS1, 0, 12);
+                Rotor rotorTwo = new Rotor(Constants.ENIGMA_LETTERS2, 1, 13);
+                Rotor rotorThree = new Rotor(Constants.ENIGMA_LETTERS3, 2, 14);
+
+                Enigma machine = new Enigma(rotorOne, rotorTwo, rotorThree);
+
+                output = machine.decryptMessage(input);
+                break;
+            }
+            case 6 -> {
+                // RC4
+                String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
+                output = RC4.decrypt(input, key);
+                break;
+            }
+            case 7 -> {
+                // AES
+                String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
+                output = AES.decrypt(input, key);
                 break;
             }
             default -> {
