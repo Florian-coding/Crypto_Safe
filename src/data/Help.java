@@ -16,8 +16,8 @@ public class Help {
     "Par exemple, \"SECURITE\" pourrait devenir \"XJPNWUVG\", et le message ne peut être déchiffré qu'en connaissant la configuration exacte des rotors utilisée au départ.";
     
     public static final String HELP_ENCRYPT_VIGENERE = "Le chiffrement de Vigenère utilise un mot-clé pour chiffrer un message en décalant chaque lettre selon la position correspondante dans le mot-clé.\n"+
-    "Par exemple, si le message est \"SECURITE\" et le mot-clé est \"CLE\", chaque lettre du message est décalée en fonction de la lettre correspondante dans le mot-clé, ce qui donne un texte comme \"UIGEVMXG\".\n"+
-    "Pour déchiffrer, il suffit d'appliquer le mot-clé en sens inverse.";
+    "Par exemple, si le message est \"SECURITE\" et le mot-clé est \"CLE\", chaque lettre du message est décalée en fonction de la lettre correspondante dans le mot-clé, \n" +
+    "ce qui donne un texte comme \"UIGEVMXG\". Pour déchiffrer, il suffit d'appliquer le mot-clé en sens inverse.";
 
     public static final String HELP_ENCRYPT_POLYBE =
     "Le chiffrement de Polybe transforme les lettres d’un message en paires de chiffres en utilisant une grille.\n"+
@@ -25,17 +25,19 @@ public class Help {
     "Ainsi, \"SECURITE\" devient une suite de chiffres comme \"43 15 31 45 24 15 44 15\", et pour déchiffrer, il suffit de retrouver les lettres correspondantes dans la grille.";
     
     public static final String HELP_ENCRYPT_VALDO =
-    "L'algorithme Valdo est un système de chiffrement qui fonctionne comme une rotation X, mais avec une rotation fixe de 22. Il transforme chaque lettre en la décalant de 22 positions dans l'alphabet, créant un texte qui semble incompréhensible.\n"+
-    "Par exemple, avec Valdo, le mot \"valdo\" devient \"rwhzk\". Ce type de chiffrement est idéal pour cacher des messages... et qui sait, peut-être qu'en cherchant bien, un mot comme \"securite\" pourrait lui-même révéler un petit secret.";
+    "L'algorithme Valdo est un système de chiffrement qui fonctionne comme une rotation X, mais avec une rotation fixe de 22. Il transforme chaque lettre en la décalant de 22 positions dans l'alphabet,\n" +
+    "créant un texte qui semble incompréhensible. Par exemple, avec Valdo, le mot \"valdo\" devient \"rwhzk\".\n" +
+    "Ce type de chiffrement est idéal pour cacher des messages... et qui sait, peut-être qu'en cherchant bien, un mot comme \"securite\" pourrait lui-même révéler un petit secret.";
     
     public static final String HELP_ENCRYPT_RC4 =
     "Le chiffrement RC4 utilise une clé secrète pour mélanger l'ordre des données du message, rendant son contenu illisible sans cette clé.\n" +
-    "Par exemple, si on chiffre \"SECURITE\" avec une clé, le message devient une série de caractères comme \"Gx1@z%8Q\". Pour le déchiffrer, il faut utiliser la même clé, qui permet de retrouver le message original.";
+    "Par exemple, si on chiffre \"SECURITE\" avec une clé, le message devient une série de caractères comme \"Gx1@z%8Q\".\n" +
+    "Pour le déchiffrer, il faut utiliser la même clé, qui permet de retrouver le message original.";
     
     public static final String HELP_ENCRYPT_AES =
     "Le chiffrement AES (Advanced Encryption Standard) est une méthode moderne et très sécurisée utilisée pour protéger les données.\n"+
-    "Il fonctionne en prenant un texte et une clé secrète pour mélanger les données du message de manière complexe, grâce à plusieurs étapes de substitution, de permutation et de transformation mathématique.\n"+
-    "Le résultat est un texte chiffré qui semble totalement aléatoire, par exemple \"7dF5gH3K\".";
+    "Il fonctionne en prenant un texte et une clé secrète pour mélanger les données du message de manière complexe, grâce à plusieurs étapes de substitution,\n" +
+    "de permutation et de transformation mathématique. Le résultat est un texte chiffré qui semble totalement aléatoire, par exemple \"7dF5gH3K\".";
 
     public static final String HELP_HASH =
     "Le hash est une méthode qui transforme un message en une suite unique de caractères, appelée empreinte, comme une sorte d'empreinte digitale. \n"+
@@ -52,8 +54,8 @@ public class Help {
     "b5a47f3c86592f2d6936c474e3a7cf06b1b211e8eecbe356b6cba3cf673773a7.";
 
     public static final String HELP_HMAC =
-    "HMAC (Hash-Based Message Authentication Code) combine un hash comme SHA-256 avec une clé secrète pour créer une empreinte unique et sécurisée d'un message. Par exemple, en utilisant \"SECURITE\" et une clé secrète, on obtient une empreinte comme:\n"+
-    "3c5e9fa6d62f91f3c24aee28c3c7f5c20e5c2431df8b6f11f5ed7d8a.";
+    "HMAC (Hash-Based Message Authentication Code) combine un hash comme SHA-256 avec une clé secrète pour créer une empreinte unique et sécurisée d'un message.\n" +
+    "Par exemple, en utilisant \"SECURITE\" et une clé secrète, on obtient une empreinte comme: 3c5e9fa6d62f91f3c24aee28c3c7f5c20e5c2431df8b6f11f5ed7d8a.";
 
     public static final String[] HELP_SELECTION = {HELP_ENCRYPT_ROT, HELP_ENCRYPT_VIGENERE, HELP_ENCRYPT_POLYBE, HELP_ENCRYPT_VALDO, HELP_ENCRYPT_ENIGMA, HELP_ENCRYPT_RC4, HELP_ENCRYPT_AES, HELP_MD5, HELP_SHA256, HELP_HMAC};
 }
