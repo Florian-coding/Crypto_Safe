@@ -11,7 +11,9 @@ import crypto.Vigenere;
 import crypto.enigma.Enigma;
 import crypto.enigma.Rotor;
 import data.Constants;
+import data.Help;
 import data.Texts;
+import java.util.Arrays;
 import java.util.List;
 import utils.FileManager;
 import utils.Verification;
@@ -43,10 +45,11 @@ public class Main {
                 PseudoRandomMenu();
             case 5 ->
                 //Todo: Implement steganography
-             CommandLineInterface.DisplayInfo(Texts.EXIT);
+                CommandLineInterface.DisplayInfo(Texts.EXIT);
             case 6 ->
                 ViewFileMenu();
-
+            case 7 ->
+                HelpMenu();
             default -> {
                 CommandLineInterface.DisplayInfo(Texts.EXIT);
             }
@@ -373,5 +376,43 @@ public class Main {
         CommandLineInterface.DisplayText(FileManager.readFromFile(Constants.CRYPTO_SAFE_FILE));
 
         MainMenu();
+    }
+
+    public static void HelpMenu() {
+        CommandLineInterface.Clear();
+        CommandLineInterface.DisplayInfo(Texts.HELP_MENU_CHOSEN);
+
+        // Concat encryptions and methods in one
+        String[] algorithms = Arrays.copyOf(Texts.ENCRYPTION_METHODS, Texts.ENCRYPTION_METHODS.length + Texts.HASH_METHODS.length);
+        System.arraycopy(Texts.HASH_METHODS, 0, algorithms, Texts.ENCRYPTION_METHODS.length, Texts.HASH_METHODS.length);
+
+        int selectedAlgorithm = CommandLineInterface.DisplayMenu(algorithms);
+
+        CommandLineInterface.Clear();
+
+        if (selectedAlgorithm == 0) {
+            MainMenu();
+            return;
+        }
+
+        selectedAlgorithm -= 1;
+
+        
+        CommandLineInterface.DisplayInfo(algorithms[selectedAlgorithm]);
+
+        String algoeirhmHelp = Help.HELP_SELECTION[selectedAlgorithm];
+
+        CommandLineInterface.DisplayText(algoeirhmHelp);
+
+        CommandLineInterface.DisplayText("");
+        int selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
+
+        switch (selectedOption) {
+            case 1 -> {
+                HelpMenu();
+                return;
+            }
+            default -> MainMenu();
+        }
     }
 }
