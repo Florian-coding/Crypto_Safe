@@ -4,8 +4,9 @@ public class Texts {
     // --- MENU -- //
     public static final String APP_NAME = "CRYPTO SAFE";
     public static final String WELCOME = "Bienvenue sur notre gestionnaire de mot de passe exceptionnel !";
-    public static final String[] MAIN_MENU = { "Chiffrer un mot de passe", "Déchiffrer un mot de passe", "Hacher un mot de passe", "Générer un nombre entier pseudo-aléatoire", "Cacher un message en stéganographie","Voir mes mots de passes","Quitter" };
+    public static final String[] MAIN_MENU = { "Chiffrer un mot de passe", "Déchiffrer un mot de passe", "Hacher un mot de passe", "Générer un nombre entier pseudo-aléatoire", "Cacher un message en stéganographie","Voir mes mots de passe","Quitter" };
     public static final String[] ENCRYPTION_METHODS = { "ROT(X)", "Vigenère", "Polybe", "Valdo", "Enigma", "RC4", "AES" };
+    public static final String[] PRE_DECRYPTION = {"Entrer un mot de passe à déchiffrer manuellement", "Déchiffrer un mot de passe à partir d'un fichier"};
     public static final String[] HASH_METHODS = { "MD5", "SHA-256", "HMAC" };
     public static final String[] HELP_MENU = {
             "Permet de chiffrer votre mot de passe grâce à un algorithme tel que Rot(X), Vigenère, Polybe, Enigma et RC4 \n Cela vous permettra de le déchiffrer par la suite.",

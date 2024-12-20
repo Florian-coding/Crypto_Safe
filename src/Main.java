@@ -33,7 +33,7 @@ public class Main {
             case 1 ->
                 EncryptMenu();
             case 2 ->
-                DecryptMenu();
+                PreDecryptMenu();
             case 3 ->
                 HashMenu();
             case 4 ->
@@ -166,11 +166,101 @@ public class Main {
         MainMenu();
     }
 
-    public static void DecryptMenu() {
+    public static void PreDecryptMenu() {
         CommandLineInterface.Clear();
         CommandLineInterface.DisplayInfo(Texts.DECRYPT_MENU_CHOSEN);
 
+        int selectedOption = CommandLineInterface.DisplayMenu(Texts.PRE_DECRYPTION);
+
+        switch (selectedOption) {
+            case 1 -> {
+                input = CommandLineInterface.AskInput("Saisir le mot de passe à déchiffrer");
+                break;
+            }
+            case 2 -> {
+                String[] encryptedMessages = FileManager.readFromFileAsArray("crypto_safe.txt");
+                CommandLineInterface.DisplayText("Choisissez un mot de passe à déchiffrer: ");
+                selectedOption = CommandLineInterface.DisplayChoice("",encryptedMessages);
+                input = encryptedMessages[selectedOption-1];
+                break;
+            }
+            default -> MainMenu();
+        }
+
+        DecryptMenu(input);
+
+
+    }
+
+    public static void DecryptMenu(String encryptedText){
+        CommandLineInterface.Clear();
+        CommandLineInterface.DisplayInfo("Veuillez choisir la méthode de déchiffrage :");
+
         int selectedOption = CommandLineInterface.DisplayMenu(Texts.ENCRYPTION_METHODS);
+
+        switch (selectedOption) {
+            case 1 -> {
+                // Rot
+                int rotations = CommandLineInterface.AskInteger("Saisir un décalage");
+                output = Rot.decrypt(encryptedText, rotations);
+                break;
+            }
+            case 2 -> {
+                // Vigenère
+                String key = CommandLineInterface.AskInput("Saisir une clé");
+                output = Vigenere.decrypt(encryptedText, key);
+                break;
+            }
+            case 3 -> {
+                // Polybe
+                String[] xy = {"Abscisse", "Ordonné"};
+
+                String[] polybeSquares = {"abcdefghijklmnopqrstuv/wxyz", "abcdefghi/jklmnopqrstuvwxyz", "Définir un autre carré de polybe"};
+                String selectedPolybeSquare;
+
+                // Prompt for what square to use or create one
+                int selectedSquare = CommandLineInterface.DisplayChoice("Quelle carré de polybe souhaitez vous utiliser ?", polybeSquares);
+
+                // Custom square provided by user
+                if (selectedSquare == 3) {
+                    selectedPolybeSquare = CommandLineInterface.AskInput("Saisir un carré de polybe sur une ligne");
+                    List<String> errors = Verification.checkPolybeSquare(selectedPolybeSquare);
+
+                    // Checks for error, if so, re prompts for a valid square
+                    while (!errors.isEmpty()) {
+                        CommandLineInterface.DisplayException(String.join(", ", errors));
+                        selectedPolybeSquare = CommandLineInterface.AskInput("Saisir un carré de polybe sur une ligne");
+                        errors = Verification.checkPolybeSquare(selectedPolybeSquare);
+                    }
+                } else {
+                    // Select valid square
+                    selectedPolybeSquare = polybeSquares[selectedSquare - 1];
+                }
+
+                // Display the selected square
+                CommandLineInterface.DisplayText("Voici votre carré");
+                Polybe.PrintSquare(selectedPolybeSquare);
+
+                // Ask for what axis to read the coordinates first
+                int rowChoice = CommandLineInterface.DisplayChoice("Lire par ordoonée ou abscisse ?", xy);
+                boolean rowFirst = rowChoice == 1;
+
+                output = Polybe.decrypt(encryptedText, selectedPolybeSquare, rowFirst);
+                break;
+            }
+            default -> {
+                MainMenu();
+            }
+
+        }
+        CommandLineInterface.DisplayText("Mot de passe déchiffré: " + output);
+
+        selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
+
+        switch (selectedOption) {
+            case 1 -> PreDecryptMenu();
+            default -> MainMenu();
+        }
     }
 
     public static void HashMenu() {
