@@ -2,23 +2,26 @@ import cli.CommandLineInterface;
 import crypto.AES;
 import crypto.HMAC;
 import crypto.MD5;
+import crypto.NumberGenerator;
 import crypto.Polybe;
 import crypto.RC4;
 import crypto.Rot;
 import crypto.SHA256;
 import crypto.Vigenere;
+import crypto.enigma.Enigma;
+import crypto.enigma.Rotor;
+import data.Constants;
 import data.Texts;
+import java.util.List;
 import utils.FileManager;
 import utils.Verification;
 
-import java.util.List;
 
 public class Main {
     public static String input;
     public static String output;
 
     public static void main(String[] args) {
-        System.out.println("test");
         MainMenu();
     }
 
@@ -61,60 +64,63 @@ public class Main {
 
         // Inform the user that some characters won't be accepted
         if (isLimitedInputAlgorithm) {
-            CommandLineInterface.DisplayInfo("L'algorithme que vous avez choisie n'accepte pas les espaces, les chiffres et les caractères spéciaux.");
-            CommandLineInterface.DisplayInfo("Les majuscules seronts traités comme des minuscules et les caractères non accepté seront rétirés.");
+            CommandLineInterface.DisplayInfo(Texts.ENCRYPTION_ALGORITHM_ALLOWED_CHARACTERS);
+            CommandLineInterface.DisplayInfo(Texts.INPUT_WILL_BE_LOWERCASE);
         }
 
         // If user didn't choose to exit, prompt for password to encrypt
         if (selectedOption > 0) {
-            input = CommandLineInterface.AskInput("Saisir le mot de passe à chiffrer");
+            input = CommandLineInterface.AskInput(Texts.INPUT_PASSWORD);
         } else {
             MainMenu();
             return;
         }
 
-        // Remove all specials characters and whitespaces, and turn upper to lower cases
+        // Check for specials characters and whitespaces, and turn upper to lower cases
         if (isLimitedInputAlgorithm) {
-            String oldInput = input;
-            input = input.toLowerCase().replaceAll("[^a-z]+", "");
+            // Converts to lower case
+            input = input.toLowerCase();
+            boolean isInvalid = !Verification.IsValidLowerAlphabet(input) || input.isEmpty() || input.isBlank();
 
-            // Display that the text changed
-            if (!oldInput.equals(input)) CommandLineInterface.DisplayInfo("Voici la saisie final: " + input);
+            while (isInvalid) {
+                CommandLineInterface.DisplayException(Texts.PASSWORD_ONLY_LETTERS);
+                input = CommandLineInterface.AskInput(Texts.INPUT_PASSWORD).toLowerCase();
+                isInvalid = !Verification.IsValidLowerAlphabet(input) || input.isEmpty() || input.isBlank();
+            }
         }
 
         // Menu logic here
         switch (selectedOption) {
             case 1 -> {
                 // Rot
-                int rotations = CommandLineInterface.AskInteger("Saisir un décalage");
+                int rotations = CommandLineInterface.AskInteger(Texts.INPUT_ROT);
                 output = Rot.encrypt(input, rotations);
                 break;
             }
             case 2 -> {
                 // Vigenère
-                String key = CommandLineInterface.AskInput("Saisir une clé");
+                String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
                 output = Vigenere.encrypt(input, key);
                 break;
             }
             case 3 -> {
                 // Polybe
-                String[] xy = {"Abscisse", "Ordonné"};
 
-                String[] polybeSquares = {"abcdefghijklmnopqrstuv/wxyz", "abcdefghi/jklmnopqrstuvwxyz", "Définir un autre carré de polybe"};
+                String[] polybeSquares = {Constants.POLYBE_SQUARE_VW, Constants.POLYBE_SQUARE_IJ , Texts.DEFINE_POLYBE_SQUARE};
                 String selectedPolybeSquare;
 
                 // Prompt for what square to use or create one
-                int selectedSquare = CommandLineInterface.DisplayChoice("Quelle carré de polybe souhaitez vous utiliser ?", polybeSquares);
+                int selectedSquare = CommandLineInterface.DisplayChoice(Texts.POLYBE_SQUARE_SELECTION, polybeSquares);
 
                 // Custom square provided by user
                 if (selectedSquare == 3) {
-                    selectedPolybeSquare = CommandLineInterface.AskInput("Saisir un carré de polybe sur une ligne");
+                    selectedPolybeSquare = CommandLineInterface.AskInput(Texts.POLYBE_INLINE_SQUARE);
                     List<String> errors = Verification.checkPolybeSquare(selectedPolybeSquare);
 
                     // Checks for error, if so, re prompts for a valid square
                     while (!errors.isEmpty()) {
                         CommandLineInterface.DisplayException(String.join(", ", errors));
-                        selectedPolybeSquare = CommandLineInterface.AskInput("Saisir un carré de polybe sur une ligne");
+                        selectedPolybeSquare = CommandLineInterface.AskInput(Texts.POLYBE_INLINE_SQUARE);
                         errors = Verification.checkPolybeSquare(selectedPolybeSquare);
                     }
                 } else {
@@ -123,39 +129,48 @@ public class Main {
                 }
                 
                 // Display the selected square 
-                CommandLineInterface.DisplayText("Voici votre carré");
+                CommandLineInterface.DisplayText(Texts.POLYBE_SQUARE_DISPLAY);
                 Polybe.PrintSquare(selectedPolybeSquare);
 
                 // Ask for what axis to read the coordinates first
-                int rowChoice = CommandLineInterface.DisplayChoice("Lire par ordoonée ou abscisse ?", xy);
+                int rowChoice = CommandLineInterface.DisplayChoice(Texts.AXIS_READ, Texts.XY_AXIS);
                 boolean rowFirst = rowChoice == 1;
 
                 output = Polybe.encrypt(input, selectedPolybeSquare, rowFirst);
                 break;
             }
             case 4 -> {
-                // Enigma
-                
-                break;
+
             }
             case 5 -> {
-                // RC4
-                String key = CommandLineInterface.AskInput("Saisir une clé");
-                output = RC4.encrypt(input, key);
+                // Enigma
+                Rotor rotorOne = new Rotor(Constants.ENIGMA_LETTERS1, 0, 12);
+                Rotor rotorTwo = new Rotor(Constants.ENIGMA_LETTERS2, 1, 13);
+                Rotor rotorThree = new Rotor(Constants.ENIGMA_LETTERS3, 2, 14);
+
+                Enigma machine = new Enigma(rotorOne, rotorTwo, rotorThree);
+
+                output = machine.encryptMessage(input);
                 break;
             }
             case 6 -> {
+                // RC4
+                String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
+                output = RC4.encrypt(input, key);
+                break;
+            }
+            case 7 -> {
                 // AES
-                String key = CommandLineInterface.AskInput("Saisir une clé");
+                String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
                 output = AES.encrypt(input, key);
                 break;
             }
         }
 
-        CommandLineInterface.DisplayText("Mot de passe chiffré: " + output);
+        CommandLineInterface.DisplayText(Texts.ENCRYPTED_PASSWORD_RESULT + output);
 
-        FileManager.writeToFile(output, "crypto_safe.txt");
-        CommandLineInterface.DisplayInfo("Le mot de passe chiffré a été stocké dans le fichier crypto_safe.txt");
+        FileManager.writeToFile(output, Constants.CRYPTO_SAFE_FILE);
+        CommandLineInterface.DisplayInfo(Texts.PASSWORD_STORED_IN + Constants.CRYPTO_SAFE_FILE);
 
         selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
 
@@ -170,16 +185,17 @@ public class Main {
         CommandLineInterface.Clear();
         CommandLineInterface.DisplayInfo(Texts.DECRYPT_MENU_CHOSEN);
 
+        // Ask user if he wants to enter the password manually or choose one from the file
         int selectedOption = CommandLineInterface.DisplayMenu(Texts.PRE_DECRYPTION);
 
         switch (selectedOption) {
             case 1 -> {
-                input = CommandLineInterface.AskInput("Saisir le mot de passe à déchiffrer");
+                input = CommandLineInterface.AskInput(Texts.INPUT_PASSWORD_TO_DECRYPT);
                 break;
             }
             case 2 -> {
-                String[] encryptedMessages = FileManager.readFromFileAsArray("crypto_safe.txt");
-                CommandLineInterface.DisplayText("Choisissez un mot de passe à déchiffrer: ");
+                String[] encryptedMessages = FileManager.readFromFileAsArray(Constants.CRYPTO_SAFE_FILE);
+                CommandLineInterface.DisplayText(Texts.INPUT_PASSWORD_TO_DECRYPT);
                 selectedOption = CommandLineInterface.DisplayChoice("",encryptedMessages);
                 input = encryptedMessages[selectedOption-1];
                 break;
@@ -188,64 +204,61 @@ public class Main {
         }
 
         DecryptMenu(input);
-
-
     }
 
     public static void DecryptMenu(String encryptedText){
         CommandLineInterface.Clear();
-        CommandLineInterface.DisplayInfo("Veuillez choisir la méthode de déchiffrage :");
+        CommandLineInterface.DisplayInfo(Texts.USER_PROMPT_DECRYPT_METHOD);
 
         int selectedOption = CommandLineInterface.DisplayMenu(Texts.ENCRYPTION_METHODS);
 
         switch (selectedOption) {
             case 1 -> {
                 // Rot
-                int rotations = CommandLineInterface.AskInteger("Saisir un décalage");
+                int rotations = CommandLineInterface.AskInteger(Texts.INPUT_ROT);
                 output = Rot.decrypt(encryptedText, rotations);
                 break;
             }
             case 2 -> {
                 // Vigenère
-                String key = CommandLineInterface.AskInput("Saisir une clé");
+                String key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
                 output = Vigenere.decrypt(encryptedText, key);
                 break;
             }
             case 3 -> {
                 // Polybe
-                String[] xy = {"Abscisse", "Ordonné"};
 
-                String[] polybeSquares = {"abcdefghijklmnopqrstuv/wxyz", "abcdefghi/jklmnopqrstuvwxyz", "Définir un autre carré de polybe"};
+                String[] polybeSquares = {Constants.POLYBE_SQUARE_VW, Constants.POLYBE_SQUARE_IJ ,Texts. DEFINE_POLYBE_SQUARE};
                 String selectedPolybeSquare;
 
                 // Prompt for what square to use or create one
-                int selectedSquare = CommandLineInterface.DisplayChoice("Quelle carré de polybe souhaitez vous utiliser ?", polybeSquares);
+                int selectedSquare = CommandLineInterface.DisplayChoice(Texts.POLYBE_SQUARE_SELECTION, polybeSquares);
 
                 // Custom square provided by user
                 if (selectedSquare == 3) {
-                    selectedPolybeSquare = CommandLineInterface.AskInput("Saisir un carré de polybe sur une ligne");
+                    selectedPolybeSquare = CommandLineInterface.AskInput(Texts.POLYBE_INLINE_SQUARE);
                     List<String> errors = Verification.checkPolybeSquare(selectedPolybeSquare);
 
                     // Checks for error, if so, re prompts for a valid square
                     while (!errors.isEmpty()) {
                         CommandLineInterface.DisplayException(String.join(", ", errors));
-                        selectedPolybeSquare = CommandLineInterface.AskInput("Saisir un carré de polybe sur une ligne");
+                        selectedPolybeSquare = CommandLineInterface.AskInput(Texts.POLYBE_INLINE_SQUARE);
                         errors = Verification.checkPolybeSquare(selectedPolybeSquare);
                     }
                 } else {
                     // Select valid square
                     selectedPolybeSquare = polybeSquares[selectedSquare - 1];
                 }
-
-                // Display the selected square
-                CommandLineInterface.DisplayText("Voici votre carré");
+                
+                // Display the selected square 
+                CommandLineInterface.DisplayText(Texts.POLYBE_SQUARE_DISPLAY);
                 Polybe.PrintSquare(selectedPolybeSquare);
 
                 // Ask for what axis to read the coordinates first
-                int rowChoice = CommandLineInterface.DisplayChoice("Lire par ordoonée ou abscisse ?", xy);
+                int rowChoice = CommandLineInterface.DisplayChoice(Texts.AXIS_READ, Texts.XY_AXIS);
                 boolean rowFirst = rowChoice == 1;
 
-                output = Polybe.decrypt(encryptedText, selectedPolybeSquare, rowFirst);
+                output = Polybe.decrypt(input, selectedPolybeSquare, rowFirst);
                 break;
             }
             default -> {
@@ -253,7 +266,7 @@ public class Main {
             }
 
         }
-        CommandLineInterface.DisplayText("Mot de passe déchiffré: " + output);
+        CommandLineInterface.DisplayText(Texts.DECRYPTED_PASSWORD_RESULT + output);
 
         selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
 
@@ -271,7 +284,7 @@ public class Main {
 
         // Prompt for a password to hash, if 0 was selected, then back to menu
         if (selectedOption > 0) {
-            input = CommandLineInterface.AskInput("Saisir le mot de passe à hasher");
+            input = CommandLineInterface.AskInput(Texts.INPUT_PASSWORD);
         } else {
             MainMenu();
             return;
@@ -281,9 +294,9 @@ public class Main {
         String key = "";
         if (selectedOption == 3) {
             while (key.isEmpty()) {
-                key = CommandLineInterface.AskInput("Saisir une clé de hachage");
+                key = CommandLineInterface.AskInput(Texts.INPUT_KEY);
                 if (key.isEmpty()) {
-                    CommandLineInterface.DisplayException("La clé ne peut être vide !");
+                    CommandLineInterface.DisplayException(Texts.EMPTY_KEY);
                 }
             }
         }
@@ -296,7 +309,7 @@ public class Main {
         }
 
         // Display result
-        CommandLineInterface.DisplayText("Hash calculé: " + output);
+        CommandLineInterface.DisplayText(Texts.COMPUTED_HASH + output);
 
         // Prompt user if he wants to retry or go back to menu
         selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
@@ -313,13 +326,25 @@ public class Main {
     public static void PseudoRandomMenu() {
         CommandLineInterface.Clear();
         CommandLineInterface.DisplayInfo(Texts.RANDOM_MENU_CHOSEN);
+
+        NumberGenerator generator = new NumberGenerator();
+        CommandLineInterface.DisplayText(Texts.GENERATED_NUMBER + generator.generate());
+
+        CommandLineInterface.DisplayText("");
+        int selectedOption = CommandLineInterface.DisplayChoice(Texts.REDO_OR_MENU, Texts.REDO_MENU_CHOICES);
+
+        switch (selectedOption) {
+            case 1 -> PseudoRandomMenu();
+        }
+
+        MainMenu();
     }
 
     public static void ViewFileMenu() {
         CommandLineInterface.Clear();
         CommandLineInterface.DisplayInfo(Texts.VIEW_FILE_MENU_CHOSEN);
-        CommandLineInterface.DisplayText("Le contenu du fichier crypto_safe.txt est le suivant:");
-        CommandLineInterface.DisplayText(FileManager.readFromFile("crypto_safe.txt"));
+        CommandLineInterface.DisplayText(Texts.FILE_DISPLAY + Constants.CRYPTO_SAFE_FILE);
+        CommandLineInterface.DisplayText(FileManager.readFromFile(Constants.CRYPTO_SAFE_FILE));
 
         MainMenu();
     }

@@ -37,4 +37,26 @@ public class Texts {
     public static final String ASK_VALID_INTEGER = "Veuillez saisir un entier valide.";
     public static final String ASK_VALID_RANGE_0 = "Veuillez saisir un entier compris entre 0 et ";
     public static final String ASK_VALID_RANGE_1 = "Veuillez saisir un entier compris entre 1 et ";
+
+    public static final String ENCRYPTION_ALGORITHM_ALLOWED_CHARACTERS = "L'algorithme que vous avez choisie n'accepte pas les espaces, les chiffres et les caractères spéciaux.";
+    public static final String INPUT_WILL_BE_LOWERCASE = "Les majuscules seronts traités comme des minuscules.";
+    public static final String INPUT_PASSWORD = "Saisir le mot de passe à chiffrer";
+    public static final String INPUT_PASSWORD_TO_DECRYPT = "Saisir le mot de passe à déchiffrer";
+    public static final String PASSWORD_ONLY_LETTERS = "Veuillez saisir un mot de passe qui contient uniquement des lettres";
+    public static final String DEFINE_POLYBE_SQUARE = "Définir un autre carré de polybe";
+    public static final String INPUT_ROT = "Saisir un décalage";
+    public static final String INPUT_KEY = "Saisir une clé";
+    public static final String POLYBE_SQUARE_SELECTION = "Quelle carré de polybe souhaitez vous utiliser ?";
+    public static final String POLYBE_INLINE_SQUARE = "Saisir un carré de polybe sur une ligne";
+    public static final String POLYBE_SQUARE_DISPLAY = "Voici votre carré";
+    public static final String[] XY_AXIS = {"Abscisse", "Ordonné"};
+    public static final String AXIS_READ = "Lire par ordoonée ou abscisse ?";
+    public static final String EMPTY_KEY = "La clé ne peut être vide !";
+    public static final String ENCRYPTED_PASSWORD_RESULT = "Mot de passe chiffré: ";
+    public static final String PASSWORD_STORED_IN = "Le mot de passe chiffré a été stocké dans le fichier ";
+    public static final String USER_PROMPT_DECRYPT_METHOD = "Veuillez choisir la méthode de déchiffrage :";
+    public static final String DECRYPTED_PASSWORD_RESULT = "Mot de passe déchiffré: ";
+    public static final String FILE_DISPLAY = "Voici le contenu du fichier ";
+    public static final String GENERATED_NUMBER = "Le nombre a été généré avec succès: ";
+    public static final String COMPUTED_HASH = "Hash calculé: ";
 }
