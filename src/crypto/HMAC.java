@@ -60,4 +60,9 @@ public class HMAC {
         // Return the hexadecimal string
         return sb.toString();
     }
+
+    public static void main(String[] args) {
+        System.out.println(hash("abc", "abc"));
+        System.out.println(hash("abc", "abc"));
+    }
 }
