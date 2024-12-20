@@ -7,6 +7,7 @@ import crypto.Polybe;
 import crypto.RC4;
 import crypto.Rot;
 import crypto.SHA256;
+import crypto.Valdo;
 import crypto.Vigenere;
 import crypto.enigma.Enigma;
 import crypto.enigma.Rotor;
@@ -63,7 +64,7 @@ public class Main {
         int selectedOption = CommandLineInterface.DisplayMenu(Texts.ENCRYPTION_METHODS);
 
         // This is used in case the user selects Rot(x), Vigenère, Polybe and Enigma
-        boolean isLimitedInputAlgorithm = 1 <= selectedOption && selectedOption <= 4;
+        boolean isLimitedInputAlgorithm = 1 <= selectedOption && selectedOption <= 5;
 
         // Inform the user that some characters won't be accepted
         if (isLimitedInputAlgorithm) {
@@ -143,7 +144,8 @@ public class Main {
                 break;
             }
             case 4 -> {
-
+                // Vadlo
+                output = Valdo.encrypt(input);
             }
             case 5 -> {
                 // Enigma
@@ -265,7 +267,7 @@ public class Main {
                 break;
             }
             case 4 -> {
-
+                output = Valdo.decrypt(input);
             }
             case 5 -> {
                 // Enigma
@@ -375,7 +377,14 @@ public class Main {
         CommandLineInterface.DisplayText(Texts.FILE_DISPLAY + Constants.CRYPTO_SAFE_FILE);
         CommandLineInterface.DisplayText(FileManager.readFromFile(Constants.CRYPTO_SAFE_FILE));
 
-        MainMenu();
+        int selectedOption = CommandLineInterface.DisplayChoice("",Texts.GO_TO_MENU);
+
+        switch (selectedOption) {
+            default -> {
+                MainMenu();
+                return;
+            }
+        }
     }
 
     public static void HelpMenu() {

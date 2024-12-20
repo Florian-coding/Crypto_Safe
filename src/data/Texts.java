@@ -23,6 +23,7 @@ public class Texts {
     public static final String VIEW_FILE_MENU_CHOSEN = "Vous avez choisie le menu de visualisation de fichier";
     public static final String HELP_MENU_CHOSEN = "Vous avez choisie le menu d'aide";
     public static final String[] REDO_MENU_CHOICES = { "Recommencer", "Retourner au menu" };
+    public static final String[] GO_TO_MENU = { "Retourner au menu ?" };
 
     public static final String APP_NAME_ASCII =
     " ██████╗██████╗ ██╗   ██╗██████╗ ████████╗ ██████╗     ███████╗ █████╗ ███████╗███████╗\n" +
